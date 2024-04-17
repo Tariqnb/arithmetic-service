@@ -8,13 +8,20 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - name: npm install
+            - name: npm install 
               run: npm ci
-            - name: run the unit tests
+            - name: run the unit tests 
               run: npm test
-            - uses: actions/checkout@v3
-            - name: Build and push the image
+            - name: Publish the image to github container registry 
               run: |
                 docker login --username tariqnb --password ${{secrets.ACCESS_TOKEN}} ghcr.io
-                docker build -t ghcr.io/tariqnb/arithmetic-service:latest --file Dockerfile .  
-                docker push ghcr.io/tariqnb/arithmetic-service:latest 
+                docker build -t ghcr.io/tariqnb/arithmetic-service:1 --file Dockerfile .
+                docker push ghcr.io/tariqnb/arithmetic-service:1
+            - name: Publish the image to azure container registry 
+              run: |
+                docker login -username practicums155 --password ${{secrets.AZURE_CONTAINER_REGISTRY}} practicums155.azurecr.io
+                docker tag ghcr.io/tariqnb/arithmetic-service:1       practicums155.azurecr.io/arithmetic-service:1
+                docker push practicums155.azurecr.io/arithmetic-service:1
+
+
+                
